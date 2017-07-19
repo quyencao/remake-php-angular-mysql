@@ -1,6 +1,6 @@
 <?php
     require_once ('DB.php');
-    $db = new DB();
+    $db = DB::instance();
 
     $tableName = 'products';
 
@@ -10,7 +10,10 @@
 
         switch ($type) {
             case 'view':
-                $records = $db->getRows($tableName);
+                $records = $db->getRowsTwoTable('products', 'categories', 'id', 'category_id',
+                array("select" => "products.id, products.name, products.price, products.description, products.image, categories.name AS productCategory"));
+                // $records = $db->getRows($tableName);
+                // echo json_encode($records);
                 if($records) {
                     $data['records'] = $records;
                     $data['status'] = 'OK';

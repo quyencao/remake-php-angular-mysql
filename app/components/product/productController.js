@@ -38,10 +38,13 @@
                                 image: response.data.product.image,
                             });
                         }
-                        $scope.form.$setPristine();
-                        $scope.tempProductData = {};
+                  
                         $scope.messageSuccess(response.data.message);
                     }
+                })
+                .finally(function() {
+                    $scope.form.$setPristine();
+                    $scope.tempProductData = {};
                     $scope.hideModal();
                 });
         };
@@ -118,12 +121,12 @@
 
         $scope.showModal = function() {
             $('#action').modal('show');
-        }
+        };
 
         $scope.hideModal = function() {
             $scope.form.$setPristine();
             $('#action').modal('hide');
-        }
+        };
 
         function init() {
             getProducts();
@@ -136,7 +139,7 @@
                 if(response.data.status == 'OK') {
                     $scope.products = response.data.records;
                 }
-            });
+            })
         };
 
        

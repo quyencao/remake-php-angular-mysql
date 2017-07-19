@@ -22,7 +22,7 @@
                 <td>{{ product.name }}</td>
                 <td>{{ product.description | shortDescriptionFilter:30 }}</td>
                 <td>{{ product.price }} đ</td>
-                <td>{{ product.category_id }}</td>
+                <td>{{ product.productCategory }}</td>
                 <td><img ng-src="{{ product.image }}" alt="" width="80"></td>
                 <td>
                     <button class="btn btn-warning" ng-click="editProduct(product)">

@@ -5,7 +5,8 @@ class DB {
     private $dbUsername = 'root';
     private $dbPassword = '';
     private $dbName     = 'sample';
-    public $db;
+    private $db;
+    private static $instance;
 
     public function __construct(){
         if(!isset($this->db)){
@@ -13,10 +14,44 @@ class DB {
                 $conn = new PDO("mysql:host=".$this->dbHost.";dbname=".$this->dbName, $this->dbUsername, $this->dbPassword);
                 $conn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $this->db = $conn;
+                self::$instance = $this;
             }catch(PDOException $e){
                 die("Failed to connect with MySQL: " . $e->getMessage());
             }
         }
+    }
+
+    public static function instance() {
+       if(self::$instance == null) {
+           self::$instance = new DB();
+       }
+       return self::$instance;
+    }
+
+    public function getRowsTwoTable($table1, $table2, $primaryKey, $foreignKey, $conditions=array()) {
+        $sql = 'SELECT ';
+        $sql .= array_key_exists("select", $conditions) ? $conditions['select'] : '*';
+        $sql .= ' FROM '.$table1 . ' INNER JOIN ' . $table2 . ' ON ' . $table1 .'.'.$foreignKey.' = '.$table2.'.'.$primaryKey;
+        $query = $this->db->prepare($sql);
+        $query->execute();
+
+        if(array_key_exists("return_type",$conditions) && $conditions['return_type'] != 'all'){
+            switch($conditions['return_type']){
+                case 'count':
+                    $data = $query->rowCount();
+                    break;
+                case 'single':
+                    $data = $query->fetch(PDO::FETCH_ASSOC);
+                    break;
+                default:
+                    $data = '';
+            }
+        }else{
+            if($query->rowCount() > 0){
+                $data = $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }
+        return !empty($data) ? $data : false;
     }
 
     public function getRows($table,$conditions = array()){
@@ -151,5 +186,14 @@ class DB {
 //             'id' => 1
 // //         );
 
-// $db = new DB();
-// $db->insert('products', $productData);
+// $db = DB::instance();
+// // $db->getRowTwoTable('products', 'categories', 'id', 'category_id');
+
+       // $records = $db->getRowsTwoTable('products', 'categories', 'id', 'category_id',
+       //              array("select" => "products.id, products.name, products.price, products.description, products.image, categories.name AS productCategory"));
+
+       // $records2 = $db->getRows('products');
+
+                    // var_dump($records);
+
+       //              var_dump($records2);

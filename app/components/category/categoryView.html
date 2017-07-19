@@ -1,0 +1,67 @@
+<div class="container">
+    <h1>Loại sản phẩm
+        <button class="btn btn-info pull-right" ng-click="createCategory()">
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+        </button>
+        <div class="alert alert-danger pull-right message" id="messageError"></div>
+        <div class="alert alert-success pull-right message" id="messageSuccess"></div>
+    </h1>
+    <table class="table table-bordered table-responsive" style="margin-top: 30px">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Mô tả</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="category in categories">
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <td>
+                    <button class="btn btn-warning" ng-click="editCategory(category)">
+                        <i class="fa fa-pencil fa-2x" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-danger" ng-click="deleteCategory(category)">
+                        <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+   
+</div>
+
+<div class="modal fade" role="dialog" id="categoryModal">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <form name="form" novalidate>
+          <div class="modal-body">
+            <div class="form-group" ng-class="{ 'has-error': form.name.$error.required && !form.name.$pristine, 'has-success': form.name.$valid }">
+                <label for="name" class="control-label">Tên</label>
+                <input type="text" name="name" class="form-control" ng-model="tempCategoryData.name" required>
+                <p ng-show="form.name.$error.required && !form.name.$pristine" class="help-block">Tên loại sản phẩm không được để trống.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': form.description.$error.required && !form.description.$pristine, 'has-success': form.description.$valid }">
+                <label for="description" class="control-label">Mô tả</label>
+                <input type="text" name="description" class="form-control" ng-model="tempCategoryData.description" required>
+                <p ng-show="form.description.$error.required && !form.description.$pristine" class="help-block">Mô tả loại sản phẩm không được để trống.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" ng-show="tempCategoryData.id" ng-click="updateCategory()" ng-disabled="form.$invalid">Cập nhật</button>
+            <button class="btn btn-primary" ng-show="!tempCategoryData.id" ng-click="addCategory()" ng-disabled="form.$invalid">Thêm</button>
+            <button class="btn btn-warning" ng-click="hideModal()">Bỏ qua</button>
+          </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
