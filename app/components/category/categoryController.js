@@ -55,11 +55,13 @@
 
         // Hiện form và Lấy dữ liệu cho form
         $scope.createCategory = function() {
+            $scope.header = "Thêm loại sản phẩm";
             $scope.tempCategoryData = {};
             $scope.showModal();
         };
 
         $scope.editCategory = function(category) {
+            $scope.header = "Cập nhật " + category.name;
             $scope.tempCategoryData = {
                 id: category.id,
                 name: category.name,
